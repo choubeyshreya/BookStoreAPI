@@ -16,7 +16,7 @@ db.connect(err=> {
     console.log("Database connected");
     // db.query('CREATE DATABASE IF NOT EXISTS bookstore;');
     db.query('USE bookstore;');
-    let bookSql = 'CREATE TABLE IF NOT EXISTS books(isbn varchar(50), title varchar(255), author varchar(255),description varchar(255), genre varchar(255), price int, quantity int, PRIMARY KEY(isbn));'
+    let bookSql = 'CREATE TABLE IF NOT EXISTS books(ISBN varchar(50), title varchar(255), Author varchar(255), description varchar(255), genre varchar(255), price int, quantity int, PRIMARY KEY(ISBN));'
     db.query(bookSql, (error, result) => {
         if(error)
             console.log(error.message);

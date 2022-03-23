@@ -17,5 +17,5 @@ app.use('/books',bookRoute);
 
 // create table 2
 app.use(express.json());
-const userRoute = require('./routes/users');
+const userRoute = require('./routes/customers');
 app.use('/users',userRoute);

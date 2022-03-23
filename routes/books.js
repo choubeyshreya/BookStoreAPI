@@ -8,11 +8,12 @@ module.exports = router
 router.post('/', (req,res) => {
     if (req.body.ISBN && req.body.title && req.body.Author && req.body.description && req.body.genre && req.body.price && req.body.quantity) {
         console.log('Request received');
+        let priceUpdated = parseFloat(req.body.price).toFixed(2);
         db.connect(function(err) {
             console.log(req.body.ISBN);
-            db.query(`INSERT INTO bookstore.books (isbn, title, author, description, genre, price, quantity) VALUES ('${req.body.ISBN}', '${req.body.title}', '${req.body.Author}', '${req.body.description}', '${req.body.genre}', '${req.body.price}', '${req.body.quantity}')`, function(err, result, fields) {
+            db.query(`INSERT INTO bookstore.books (ISBN, title, Author, description, genre, price, quantity) VALUES ('${req.body.ISBN}', '${req.body.title}', '${req.body.Author}', '${req.body.description}', '${req.body.genre}', '${priceUpdated}', '${req.body.quantity}')`, function(err, result, fields) {
                 if (err){
-                    res.send(err);
+                    res.status(422).send("{ \n \"message\" : \"This ISBN already exists in the system.\" \n}");
                     return;
                 }
                 console.log('Data inserted');
@@ -35,6 +36,7 @@ router.post('/', (req,res) => {
             });
         });
     } else {
+        res.status(400).send("{ \n \"message\" : \"Illegal, missing, or malformed input\" \n}");
         console.log('Missing a parameter');
     }
 });
@@ -50,8 +52,13 @@ router.post('/', (req,res) => {
                     console.log('In get method 2');
                     let queryRes =  `SELECT * from bookstore.books where isbn = '${req.params.ISBN}'`;
                     let query = db.query(queryRes,(err, results) => {
+
                         if(err){
-                            console.log(err);
+                            res.status(404).send("{ \n \"message\" : \"ISBN not found\" \n}");
+                            return;
+                        }
+                        if(results.length === 0 || query == null){
+                            res.status(404).send("{ \n \"message\" : \"ISBN not found\" \n}");
                             return;
                         }
                         console.log(results);
@@ -63,7 +70,7 @@ router.post('/', (req,res) => {
                 }
             });
         }else {
-            console.log('Missing a parameter');
+            res.status(400).send("{ \n \"message\" : \"Illegal, missing, or malformed input\" \n}");
         }
     });
 
@@ -90,14 +97,19 @@ router.put('/:ISBN', (req,res) => {
                                     quantity    = '${req.body.quantity}'
                                 where isbn = '${req.body.ISBN}'`;
                 let query = db.query(queryRes, (err, results) => {
-                    if (err) {
-                        console.log(err);
+                    if(err){
+                        res.status(404).send("{ \n \"message\" : \"ISBN not found\" \n}");
+                        return;
+                    }
+                    if(results.length === 0 || query == null){
+                        res.status(404).send("{ \n \"message\" : \"ISBN not found\" \n}");
                         return;
                     }
                     console.log('Data updated');
                 });
 
             } catch (err) {
+                res.status(404).send("{ \n \"message\" : \"ISBN not found\" \n}")
                 res.send(err);
             }
 
@@ -107,8 +119,12 @@ router.put('/:ISBN', (req,res) => {
                                 from bookstore.books
                                 where isbn = '${req.params.ISBN}'`;
                 let query = db.query(queryRes, (err, results) => {
-                    if (err) {
-                        console.log(err);
+                    if(err){
+                        res.status(404).send("{ \n \"message\" : \"ISBN not found\" \n}");
+                        return;
+                    }
+                    if(results.length === 0 || query == null){
+                        res.status(404).send("{ \n \"message\" : \"ISBN not found\" \n}");
                         return;
                     }
                     console.log(results);
@@ -116,10 +132,10 @@ router.put('/:ISBN', (req,res) => {
                 });
 
             } catch (err) {
-                res.send(err);
+                res.status(404).send("{ \n \"message\" : \"ISBN not found\" \n}")
             }
         });
     } else {
-        console.log('Missing a parameter');
+        res.status(400).send("{ \n \"message\" : \"Illegal, missing, or malformed input\" \n}")
     }
 });
