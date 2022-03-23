@@ -4,16 +4,6 @@ const db = require('../db')
 
 module.exports = router
 
-/*
-isbn varchar(50),
-title varchar(255),
-author varchar(255),
-description varchar(255),
-genre varchar(255),
-price int,
-quantity int
-
-*/
 //add book
 router.post('/', (req,res) => {
     if (req.body.ISBN && req.body.title && req.body.Author && req.body.description && req.body.genre && req.body.price && req.body.quantity) {
@@ -48,56 +38,6 @@ router.post('/', (req,res) => {
         console.log('Missing a parameter');
     }
 });
-
-
-
-    // //update book
-    // router.get('/updatesISBN/:ISBN ', (req,res) => {
-    //     console.log('entered here in update!!');
-    //     res.send('entered here in update')
-    //     // if (req.params.ISBN){
-    //     //     console.log('Request received');
-    //     //     db.connect(function(err) {
-    //     //         console.log(req.params.ISBN);
-    //     //         try{
-    //     //             console.log('updates now!!');
-    //     //             let queryRes =  `UPDATE bookstore.books set title  = '${req.body.title}' , author  = '${req.body.author}',
-    //     //                                 description  = '${req.body.description}', genre  = '${req.body.genre}', price  = '${req.body.price}',
-    //     //                                 quantity  = '${req.body.quantity}' where isbn = '${req.body.ISBN}'`;
-    //     //             let query = db.query(queryRes,(err, results) => {
-    //     //                 if(err){
-    //     //                     console.log(err);
-    //     //                     return;
-    //     //                 }
-    //     //                 console.log('Data updated');
-    //     //             });
-    //     //
-    //     //         }catch(err){
-    //     //             res.send(err);
-    //     //         }
-    //     //
-    //     //         try{
-    //     //             console.log('updating and what??');
-    //     //             let queryRes =  `SELECT * from bookstore.books where isbn = '${req.params.ISBN}'`;
-    //     //             let query = db.query(queryRes,(err, results) => {
-    //     //                 if(err){
-    //     //                     console.log(err);
-    //     //                     return;
-    //     //                 }
-    //     //                 console.log(results);
-    //     //                 res.status(201).json(results[0]);
-    //     //             });
-    //     //
-    //     //         }catch(err){
-    //     //             res.send(err);
-    //     //         }
-    //     //     });
-    //     // }else {
-    //     //     console.log('Missing a parameter');
-    //     // }
-    // });
-
-
 
 
     //retrieve book
