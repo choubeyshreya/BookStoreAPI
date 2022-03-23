@@ -12,27 +12,14 @@ router.post('/', (req,res) => {
         db.connect(function(err) {
             console.log(req.body.ISBN);
             db.query(`INSERT INTO bookstore.books (ISBN, title, Author, description, genre, price, quantity) VALUES ('${req.body.ISBN}', '${req.body.title}', '${req.body.Author}', '${req.body.description}', '${req.body.genre}', '${priceUpdated}', '${req.body.quantity}')`, function(err, result, fields) {
-                if (err){
+                if (err) {
                     res.status(422).send("{ \n \"message\" : \"This ISBN already exists in the system.\" \n}");
                     return;
                 }
                 console.log('Data inserted');
                 console.log(req.body.ISBN);
-                try{
-                    console.log('here now');
-                    let queryRes =  `SELECT * from bookstore.books where isbn = '${req.body.ISBN}'`;
-                    let query = db.query(queryRes,(err, results) => {
-                        if(err){
-                            console.log(err);
-                            return;
-                        }
-                        console.log(results);
-                        res.status(201).json(results[0]);
-                    });
+                res.status(302).redirect( `http://localhost:3000/books/isbn/${req.body.ISBN}`);
 
-                }catch(err){
-                    res.send(err);
-                }
             });
         });
     } else {
@@ -40,6 +27,8 @@ router.post('/', (req,res) => {
         console.log('Missing a parameter');
     }
 });
+
+
 
 
     //retrieve book

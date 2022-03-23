@@ -23,13 +23,15 @@ router.post('/', (req,res) => {
                 console.log(req.body.userId);
                 try{
                     console.log('here now');
-                    let queryRes =  `SELECT * from bookstore.customers where userId = '${req.body.userId}'`;
+                    let queryRes =  `SELECT id from bookstore.customers where userId = '${req.body.userId}'`;
                     let query = db.query(queryRes,(err, results) => {
                         if(err){
                             res.status(422).send("{ \n \"message\" : \"This user ID already exists in the  system\" \n}")
                         }
-                        console.log(results);
-                        res.status(201).json(results[0]);
+
+                        console.log(results[0].id);
+                        res.send({redirect: `http://localhost:3000/customers/${results[0].id}`});
+
                     });
 
                 }catch(err){
