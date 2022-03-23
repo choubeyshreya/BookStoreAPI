@@ -24,13 +24,14 @@ db.connect(err=> {
         console.log('Here now -- table created or not?')
     });
 
-    let custSql = 'CREATE TABLE IF NOT EXISTS customers(id int NOT NULL AUTO_INCREMENT, userId varchar(50), name varchar(255), phone varchar(50),address varchar(255), address2 varchar(255), city varchar(50), state varchar(100), zipcode int ,PRIMARY KEY(id))';
+    let custSql = 'CREATE TABLE IF NOT EXISTS customers(id int NOT NULL AUTO_INCREMENT, userId varchar(50) , name varchar(255), phone varchar(50),address varchar(255), address2 varchar(255), city varchar(50), state varchar(100), zipcode int ,PRIMARY KEY(id))';
     db.query(custSql, (error, result, ) =>{
         if(error)
             console.log(error.message);
         console.log(result);
 
     });
+
 });
 
 module.exports = db;
