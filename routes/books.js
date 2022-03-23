@@ -26,18 +26,22 @@ router.post('/', (req,res) => {
                     return;
                 }
                 console.log('Data inserted');
-
+                console.log(req.body.ISBN);
                 try{
-                    System.out.println("Data inserted !! ");
-                    let isbn = req.body.ISBN;
-                    let bookResult = db.query(`select * from bookstore.books where isbn = ${isbn}`);
-                    res.status(201).json(bookResult.result);
-                    res.send(req.body);
+                    console.log('here now');
+                    let queryRes =  `SELECT * from bookstore.books where isbn = '${req.body.ISBN}'`;
+                    let query = db.query(queryRes,(err, results) => {
+                        if(err){
+                            console.log(err);
+                            return;
+                        }
+                        console.log(results);
+                        res.status(201).json(results[0]);
+                    });
+
                 }catch(err){
                     res.send(err);
                 }
-
-
             });
         });
     } else {
@@ -64,14 +68,9 @@ router.get('/isbn/:ISBN', (req,res) => {
                         console.log(err);
                         return;
                     }
-
                     console.log(results);
-
                     res.status(201).json(results[0]);
                 });
-
-
-
 
             }catch(err){
                 res.send(err);
