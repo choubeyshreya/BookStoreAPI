@@ -49,22 +49,125 @@ router.post('/', (req,res) => {
     }
 });
 
-//update book
-router.put('/:ISBN ', (req,res) => {
-    res.send(req.params.ISBN);
-})
 
-//retrieve book
-router.get('/isbn/:ISBN', (req,res) => {
-    if (req.params.ISBN){
+
+    // //update book
+    // router.get('/updatesISBN/:ISBN ', (req,res) => {
+    //     console.log('entered here in update!!');
+    //     res.send('entered here in update')
+    //     // if (req.params.ISBN){
+    //     //     console.log('Request received');
+    //     //     db.connect(function(err) {
+    //     //         console.log(req.params.ISBN);
+    //     //         try{
+    //     //             console.log('updates now!!');
+    //     //             let queryRes =  `UPDATE bookstore.books set title  = '${req.body.title}' , author  = '${req.body.author}',
+    //     //                                 description  = '${req.body.description}', genre  = '${req.body.genre}', price  = '${req.body.price}',
+    //     //                                 quantity  = '${req.body.quantity}' where isbn = '${req.body.ISBN}'`;
+    //     //             let query = db.query(queryRes,(err, results) => {
+    //     //                 if(err){
+    //     //                     console.log(err);
+    //     //                     return;
+    //     //                 }
+    //     //                 console.log('Data updated');
+    //     //             });
+    //     //
+    //     //         }catch(err){
+    //     //             res.send(err);
+    //     //         }
+    //     //
+    //     //         try{
+    //     //             console.log('updating and what??');
+    //     //             let queryRes =  `SELECT * from bookstore.books where isbn = '${req.params.ISBN}'`;
+    //     //             let query = db.query(queryRes,(err, results) => {
+    //     //                 if(err){
+    //     //                     console.log(err);
+    //     //                     return;
+    //     //                 }
+    //     //                 console.log(results);
+    //     //                 res.status(201).json(results[0]);
+    //     //             });
+    //     //
+    //     //         }catch(err){
+    //     //             res.send(err);
+    //     //         }
+    //     //     });
+    //     // }else {
+    //     //     console.log('Missing a parameter');
+    //     // }
+    // });
+
+
+
+
+    //retrieve book
+    router.get('/isbn/:ISBN', (req,res) => {
+        if (req.params.ISBN){
+            console.log('Request received');
+            db.connect(function(err) {
+                console.log(req.params.ISBN);
+                try{
+                    console.log('In get method 2');
+                    let queryRes =  `SELECT * from bookstore.books where isbn = '${req.params.ISBN}'`;
+                    let query = db.query(queryRes,(err, results) => {
+                        if(err){
+                            console.log(err);
+                            return;
+                        }
+                        console.log(results);
+                        res.status(201).json(results[0]);
+                    });
+
+                }catch(err){
+                    res.send(err);
+                }
+            });
+        }else {
+            console.log('Missing a parameter');
+        }
+    });
+
+
+
+
+    // update book
+
+
+router.put('/:ISBN', (req,res) => {
+    console.log('entered here in update!!');
+    if (req.params.ISBN) {
         console.log('Request received');
-        db.connect(function(err) {
+        db.connect(function (err) {
             console.log(req.params.ISBN);
-            try{
-                console.log('here now');
-                let queryRes =  `SELECT * from bookstore.books where isbn = '${req.params.ISBN}'`;
-                let query = db.query(queryRes,(err, results) => {
-                    if(err){
+            try {
+                console.log('updates now!!');
+                let queryRes = `UPDATE bookstore.books
+                                set title       = '${req.body.title}',
+                                    author      = '${req.body.author}',
+                                    description = '${req.body.description}',
+                                    genre       = '${req.body.genre}',
+                                    price       = '${req.body.price}',
+                                    quantity    = '${req.body.quantity}'
+                                where isbn = '${req.body.ISBN}'`;
+                let query = db.query(queryRes, (err, results) => {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    console.log('Data updated');
+                });
+
+            } catch (err) {
+                res.send(err);
+            }
+
+            try {
+                console.log('updating and what??');
+                let queryRes = `SELECT *
+                                from bookstore.books
+                                where isbn = '${req.params.ISBN}'`;
+                let query = db.query(queryRes, (err, results) => {
+                    if (err) {
                         console.log(err);
                         return;
                     }
@@ -72,12 +175,11 @@ router.get('/isbn/:ISBN', (req,res) => {
                     res.status(201).json(results[0]);
                 });
 
-            }catch(err){
+            } catch (err) {
                 res.send(err);
             }
         });
-    }else {
+    } else {
         console.log('Missing a parameter');
     }
 });
-
