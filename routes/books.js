@@ -18,8 +18,8 @@ router.post('/', (req,res) => {
                 }
                 console.log('Data inserted');
                 console.log(req.body.ISBN);
-                res.status(302).redirect( `http://localhost:3000/books/isbn/${req.body.ISBN}`);
-
+                res.location(`http://localhost:3000/books/isbn/${req.body.ISBN}`);
+                res.redirect(301, `http://localhost:3000/books/isbn/${req.body.ISBN}`);
             });
         });
     } else {
