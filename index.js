@@ -3,8 +3,8 @@ const db = require('./db')
 const sql = require('mysql')
 
 const app = express();
-app.listen(3000, () =>{
-   console.log('server started at port 3000');
+app.listen(8080, () =>{
+   console.log('server started at port 8080');
 });
 
 db;
