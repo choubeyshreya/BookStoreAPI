@@ -19,18 +19,15 @@ router.post('/', (req,res) => {
                     res.status(422).send("{ \n \"message\" : \"This user ID already exists in the  system\" \n}")
 
                 }
-                console.log('Data inserted');
-                console.log(req.body.userId);
+
                 try{
-                    console.log('here now');
-                    let queryRes =  `SELECT id from bookstore.customers where userId = '${req.body.userId}'`;
+                    // console.log('here now');
+                    let queryRes =  `SELECT * from bookstore.customers where userId = '${req.body.userId}'`;
                     let query = db.query(queryRes,(err, results) => {
                         if(err){
                             res.status(422).send("{ \n \"message\" : \"This user ID already exists in the  system\" \n}")
                         }
-
-                        console.log(results[0].id);
-                        res.send({redirect: `http://localhost:3000/customers/${results[0].id}`});
+                        res.location("/"+results[0].id).status(201).json(results[0]);
 
                     });
 
@@ -47,12 +44,12 @@ router.post('/', (req,res) => {
 
 //retrieve customer userId
 router.get('/p', (req,res) => {
-    console.log('entered here in user Id!!');
+    // console.log('entered here in user Id!!');
 
         db.connect(function (err) {
             console.log(req.query.userId);
             try {
-                console.log('User Id!!');
+                // console.log('User Id!!');
                 let queryRes = `select * from  bookstore.customers where userId = '${req.query.userId}'`;
                 let query = db.query(queryRes, (err, results) => {
                     if (err) {
@@ -63,7 +60,7 @@ router.get('/p', (req,res) => {
                         return;
                     }
                     console.log(results.length);
-                    res.status(201).json(results[0]);
+                    res.status(200).json(results[0]);
                     console.log('userID id customer method');
                 });
 
@@ -80,9 +77,9 @@ router.get('/p', (req,res) => {
 // retrieve customer based on numeric id
 
 router.get('/:id', (req,res) => {
-    console.log('entered here in numeric ID!!');
+    // console.log('entered here in numeric ID!!');
     if (req.params.id) {
-        console.log('Request received');
+        // console.log('Request received');
         db.connect(function (err) {
             console.log(req.params.id);
             try {
@@ -99,7 +96,7 @@ router.get('/:id', (req,res) => {
                         return;
                     }
                     console.log(results.length);
-                    res.status(201).json(results[0]);
+                    res.status(200).json(results[0]);
                     console.log('Numeric id customer method');
                 });
 

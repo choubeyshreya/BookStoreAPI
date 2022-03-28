@@ -16,12 +16,30 @@ router.post('/', (req,res) => {
                     res.status(422).send("{ \n \"message\" : \"This ISBN already exists in the system.\" \n}");
                     return;
                 }
-                console.log('Data inserted');
-                console.log(req.body.ISBN);
-                res.location(`http://localhost:3000/books/isbn/${req.body.ISBN}`);
-                res.redirect(301, `http://localhost:3000/books/isbn/${req.body.ISBN}`);
+
+                try{
+                    let queryRes =  `SELECT * from bookstore.books where ISBN = '${req.body.ISBN}'`;
+                    let query = db.query(queryRes,(err, results) => {
+
+                        if(err){
+                            res.status(400).send("{ \n \"message\" : \" Illegal, missing, or malformed input \" \n}");
+                            return;
+                        }
+                        if(results.length === 0 || query == null){
+                            res.status(400).send("{ \n \"message\" : \" Illegal, missing, or malformed input \" \n}");
+                            return;
+                        }
+                        console.log(results);
+                        res.location("/"+req.body.ISBN).status(201).json(results[0]);
+                    });
+
+                }catch(err){
+                    res.send(err);
+                }
+
             });
         });
+
     } else {
         res.status(400).send("{ \n \"message\" : \"Illegal, missing, or malformed input\" \n}");
         console.log('Missing a parameter');
@@ -34,12 +52,12 @@ router.post('/', (req,res) => {
     //retrieve book
     router.get('/isbn/:ISBN', (req,res) => {
         if (req.params.ISBN){
-            console.log('Request received');
+            // console.log('Request received');
             db.connect(function(err) {
                 console.log(req.params.ISBN);
                 try{
                     console.log('In get method 2');
-                    let queryRes =  `SELECT * from bookstore.books where isbn = '${req.params.ISBN}'`;
+                    let queryRes =  `SELECT * from bookstore.books where ISBN = '${req.params.ISBN}'`;
                     let query = db.query(queryRes,(err, results) => {
 
                         if(err){
@@ -51,7 +69,7 @@ router.post('/', (req,res) => {
                             return;
                         }
                         console.log(results);
-                        res.status(201).json(results[0]);
+                        res.status(200).json(results[0]);
                     });
 
                 }catch(err){
@@ -68,23 +86,22 @@ router.post('/', (req,res) => {
 
     // update book
 
-
 router.put('/:ISBN', (req,res) => {
-    console.log('entered here in update!!');
+    // console.log('entered here in update!!');
     if (req.params.ISBN) {
-        console.log('Request received');
+        // console.log('Request received');
         db.connect(function (err) {
             console.log(req.params.ISBN);
             try {
                 console.log('updates now!!');
                 let queryRes = `UPDATE bookstore.books
                                 set title       = '${req.body.title}',
-                                    author      = '${req.body.author}',
+                                    Author      = '${req.body.author}',
                                     description = '${req.body.description}',
                                     genre       = '${req.body.genre}',
                                     price       = '${req.body.price}',
                                     quantity    = '${req.body.quantity}'
-                                where isbn = '${req.body.ISBN}'`;
+                                where ISBN = '${req.body.ISBN}'`;
                 let query = db.query(queryRes, (err, results) => {
                     if(err){
                         res.status(404).send("{ \n \"message\" : \"ISBN not found\" \n}");
@@ -94,7 +111,7 @@ router.put('/:ISBN', (req,res) => {
                         res.status(404).send("{ \n \"message\" : \"ISBN not found\" \n}");
                         return;
                     }
-                    console.log('Data updated');
+                    // console.log('Data updated');
                 });
 
             } catch (err) {
@@ -103,10 +120,10 @@ router.put('/:ISBN', (req,res) => {
             }
 
             try {
-                console.log('updating and what??');
-                let queryRes = `SELECT *
+                // console.log('updating and what??');
+                let queryRes = `SELECT *                        
                                 from bookstore.books
-                                where isbn = '${req.params.ISBN}'`;
+                                where ISBN = '${req.params.ISBN}'`;
                 let query = db.query(queryRes, (err, results) => {
                     if(err){
                         res.status(404).send("{ \n \"message\" : \"ISBN not found\" \n}");
@@ -117,7 +134,7 @@ router.put('/:ISBN', (req,res) => {
                         return;
                     }
                     console.log(results);
-                    res.status(201).json(results[0]);
+                    res.status(200).json(results[0]);
                 });
 
             } catch (err) {
